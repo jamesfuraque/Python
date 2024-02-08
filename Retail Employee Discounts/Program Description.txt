@@ -1,0 +1,97 @@
+Problem:
+Write a program for a retail store that will allow them to calculate discounts for their employees when they buy items. 
+Discounts are based on the number of years worked (2% for each year, maximum 10%) as well as if the employee is a manager (10% more discount on top of the worked year discount) or hourly employee (2% discount). 
+They are also allowed not discount once they have received $200 discount.  
+
+The program starts asking for the employee discount number to start purchasing. 
+The employee can purchase 1 item at a time. Do this until the user answers “NO” for “Another purchase?”. 
+Once all employees have been processed, display the All-Employee Summary and give the users option to go back to Menu or Exit the program.
+
+
+Actions:
+1. Menu Pages:
+Create the menus below using a square created in the console by printing dashes (-) and pipes  (|) where appropriate. 
+It should look something like this but large enough to cover almost ½ of your computer screen when printed on the console (no need to calculate for the monitor size-just approximate is fine):
+
+e.g.
+———————————————
+|   1- Create Employee      |
+|   2- Create Item          |
+|   3- Make Purchase        |
+|   4-All Employee Summary  |
+|   5-Exit                  |
+———————————————
+
+
+2. Specific Menu Pages to Create:
+2.1. Create Employee Page
+a. Please define a function that asks the user to get the employees’ information and add that to the list. Whenever the user enters “NO” it will finish getting the employees’ information.
+b. Use a 2-dimensional list to create and save the employee information where each item in the list consists of the information of 1 employee:
+[Employee ID, Employee Name, Employee Type, Years Worked, Total Purchased, Total Discounts, Employee Discount Number]
+E.g. 
+employee_list = [
+[1001, John Alber, hourly, 8, 0, 0, 22737], 
+[1002, Sarah Rose, manager, 12, 0, 0, 22344],
+[1003, Alex Folen, manager, 5, 0, 0, 22957],
+[1004, Pola Sahari, hourly, 17, 0, 0, 22488]
+]
+c. Inputs must be validated to satisfy the following requirements:
+•	Employee ID is unique within the list
+•	Employee Discount is unique within the list
+•	Null/empty value is not allowed for any of the fields
+•	Input must be number for Employee ID, Years Worked, and Employee Discount Number
+•	Input must be “hourly” or “manager” for Employee Type
+•	Input is not required for Total Purchased and Total Discounts when the employee is first created in the system, these fields should be assigned with a default value of 0.
+
+2.2 Create Item Page
+a. Please define a function that asks the user to get the items’ information and add that to the list. Whenever the user enters “NO” it will finish getting the items’ information.
+b. Use a 2-dimensional list to create and save the item information where each item in the list consists of similar information as follows:
+[Item Number, Item Name, Item Cost]
+E.g. 
+item_list = [
+[11526, Nike shoes, 120], 
+[11849, Trampoline,180],
+[11966, Mercury Bicycle, 150],
+[11334, Necklace Set, 80]
+]
+c. Inputs must be validated to satisfy the following requirements:
+•	Item Number is unique within the list
+•	Null/empty value is not allowed for any of the fields
+•	Input must be number for Item Number and Item Cost
+
+
+2.3 Make a Purchase Page
+This page will list all the items available for sales. For each item, display Item Number, Item Name, Item Cost. Please choose one of the following formats to display the Item list.
+Option 1: Print with format
+Item Number | Item Name         | Item Cost
+11526       | Nike shoes        | $120.00
+11849       | Trampoline        | $180.00
+11966       | Mercury Bicycle   | $150.00
+11334       | Necklace Set      | $80.00
+
+Option 2: Simple print
+Item Number, Item Name, Item Cost
+11526, Nike shoes, $120.00 
+11849, Trampoline, $180.00
+11966, Mercury Bicycle, $150.00
+11334, Necklace Set, $80.00
+
+The page then prompts for user inputs such as item number and employee discount number to make the purchase. 
+Do this until the user answers “NO” for “Another purchase?”. 
+Once all employees have been processed, display the All-Employee Summary Page and give the users option to go back to Menu or Exit the program.  Following the flowchart diagram below for the purchasing process.
+Discounts are based on the number of years worked (2% for each year, maximum 10%) as well as if the employee is a manager (10% more discount on top of the worked year discount) or hourly employee (2% discount). 
+They are also allowed no discount once they have received $200 discount.  
+
+
+2.4. All Employee Summary Page
+This page will list all the employees of the company. For each employee, display Employee ID, Employee Name, Employee Type, Years Worked, Total Purchased, Employee Discount Number. Please choose one of the following formats to display the Employee list.
+
+Option 1: Print with format
+Employee ID | Employee Name | Employee Type | Years Worked | Total Purchased | Total Discount | Employee Discount Number
+1001        | John Alber    | hourly        | 8            |$ 90.00          | $10            | 22737
+1002        | Sarah Rose    | manager       | 12           |$ 40.00          | $10            | 22344
+
+Option 2: Simple print
+Employee ID, Employee Name, Employee Type, Years Worked, Total Purchased, Total Discounts, Employee Discount Number
+1001, John Alber, hourly, 8, 90, 10, 22737
+1002, Sarah Rose, manager, 12,40, 10, 22344
