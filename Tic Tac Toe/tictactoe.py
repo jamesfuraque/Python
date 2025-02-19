@@ -1,146 +1,122 @@
-import tkinter
+# @author: James Furaque
+# @description: in this file, we will configure the entirety
+# of the game's function.
+# aside from main methods that we're going to have,
+# I always want to make some helper functions so it's 
+# easier to read and understand the code.
+import tkinter as tk
+import sys
 
-# MAKE A FUNCTION TO HANDLE THE TILES OF THE GAME
-def set_tile(row, column):
-    global current_player
+if len(sys.argv) < 3:                                                   # Before going straight to our game's codes
+    print("Error: We need player's name. Please run main.py first.")  # we'll try to et player names from command-line arguments
+    sys.exit(1)                                                         # so we can use it and apply it to the board
 
-    if (game_over):
+firstPlayerName = sys.argv[1]                                           # We can now expect player 1's name &
+secondPlayerName = sys.argv[2]                                          # Player 2's name 
+firstPlayerSymbol = "X"                                                 # After that, we can determine their symbols here
+secondPlayerSymbol = "O"                                                # Player 1 should take X symbol and O for player 2.
+
+currentPlayerName = firstPlayerName                                     # In this part, we're staring to create assignments for our players
+currentPlayerSymbol = firstPlayerSymbol                                 # This way, we can track the current player in our board.
+
+color_blue = "#4584b6"                                                  # This part, is just the colors that we want to use
+color_yellow = "#ffde57"                                                # In order to visualize our board.
+color_gray = "#343434"
+color_light_gray = "#646464"
+
+turns = 0                                                               # Setting the turns to 0 to help us out with tracking our turns.
+game_over = False                                                       # initiating a variable as well so we can use it to track if game is over.
+
+                                                                        # After setting up things, we can now start the functions of the game.
+def set_tile(row, column):                                              # This function handles the tile clicks
+    global currentPlayerName, currentPlayerSymbol, game_over            # so we can track the switches between player's turn
+    if game_over or game_board[row][column]["text"] != "":
         return
     
-    if game_board[row][column]["text"] != "":
-        return
-    game_board[row][column]["text"] = current_player
-    if current_player == player2:
-        current_player = player1
+    game_board[row][column]["text"] = currentPlayerSymbol
+    if currentPlayerName == firstPlayerName:
+        currentPlayerName = secondPlayerName
+        currentPlayerSymbol = secondPlayerSymbol
     else:
-        current_player = player2
-    label["text"] = current_player+"'s turn"
+        currentPlayerName = firstPlayerName
+        currentPlayerSymbol = firstPlayerSymbol
 
-    # CHECKK IF THERE'S WINNER
+    label["text"] = currentPlayerName + "'s turn"
     check_winner()
 
-# MAKE A FUNCTION TO CHECK FOR A WINNER
-def check_winner():
-    global turns, game_over
-    turns += 1
+def get_player_name(symbol):                                                         # We will also create this function to help us 
+    return firstPlayerName if symbol == firstPlayerSymbol else secondPlayerName      # for the next functions that we're going to create.
 
-    # HORIZONTAL WINNER
-    for row in range(3):
-        if (game_board[row][0]["text"] == game_board[row][1]["text"] == game_board[row][2]["text"]
+def check_winner():                                                     # Next, this function checkes the winnner
+    global turns, game_over                                             # Not just in one places, but through horizontal, vertical and diagonal.
+    turns += 1
+    for row in range(3):                                                                                                    # First to check:
+        if (game_board[row][0]["text"] == game_board[row][1]["text"] == game_board[row][2]["text"]                          # Horizontal Winner
             and game_board[row][0]["text"] != ""):
-            label.config(text=game_board[row][0]["text"]+" is the winner!", foreground=color_yellow)
-            for column in range(3):
-                game_board[row][column].config(foreground=color_yellow,  background = color_light_gray)
+            label.config(text=f"{get_player_name(game_board[row][0]['text'])} is the winner!", foreground=color_yellow)
             game_over = True
             return
         
-    # VERTICAL WINNER
-    for column in range(3):
-        if (game_board[0][column]["text"] == game_board[1][column]["text"] == game_board[2][column]["text"]
-            and game_board[0][column]["text"] != ""):
-            label.config(text=game_board[0][column]["text"]+" is the winner!", foreground=color_yellow)
-            for row in range(3):
-                game_board[row][column].config(foreground=color_yellow,  background = color_light_gray)
+    for col in range(3):                                                                                                    # Next will be our
+        if (game_board[0][col]["text"] == game_board[1][col]["text"] == game_board[2][col]["text"]                          # Vertical Winner
+            and game_board[0][col]["text"] != ""):
+            label.config(text=f"{get_player_name(game_board[0][col]['text'])} is the winner!", foreground=color_yellow)
             game_over = True
             return
         
-    # DIAGONALLY WINNER
-    if (game_board[0][0]["text"] == game_board[1][1]["text"] == game_board[2][2]["text"]
-        and game_board[0][0]["text"] != ""):
-        label.config(text = game_board[0][0]["text"]+ " is the winner!", foreground=color_yellow)
-        for i in range(3):
-            game_board[i][i].config(foreground=color_yellow, background=color_light_gray)
-        game_over = True
+    if (game_board[0][0]["text"] == game_board[1][1]["text"] == game_board[2][2]["text"]                                    # Checking digonal winner aswell
+        and game_board[0][0]["text"] != ""):                                                                                # this quite tricky because you need 
+        label.config(text=f"{get_player_name(game_board[0][0]['text'])} is the winner!", foreground=color_yellow)           # to check from top to bottom
+        game_over = True                                                                                                    # and bottom to top
         return
     
     if (game_board[0][2]["text"] == game_board[1][1]["text"] == game_board[2][0]["text"]
         and game_board[0][2]["text"] != ""):
-        label.config(text = game_board[0][2]["text"]+ " is the winner!", foreground=color_yellow)
-        game_board[0][2].config(foreground=color_yellow, background=color_light_gray)
-        game_board[1][1].config(foreground=color_yellow, background=color_light_gray)
-        game_board[2][0].config(foreground=color_yellow, background=color_light_gray)
+        label.config(text=f"{get_player_name(game_board[0][2]['text'])} is the winner!", foreground=color_yellow)
         game_over = True
         return
     
-    # GAME IS TIE
-    if turns == 9:
-        game_over = True
+    if turns == 9:                                                                                                          # and if the board is full
+        game_over = True                                                                                                    # we will tie the game
         label.config(text="Tie!", foreground=color_yellow)
 
 
-# MAKE A FUNCTION FOR STARTING A GAME
-def new_game():
-    global turns, game_over
-    turns = 0
+def new_game():                                                                                 # Okay, now after we created the function to identify the winner
+    global turns, game_over, currentPlayerName, currentPlayerSymbol                             # I think it's better if we have a function
+    turns = 0                                                                                   # To restart the game as well.
     game_over = False
+    currentPlayerName = firstPlayerName
+    currentPlayerSymbol = firstPlayerSymbol
 
-    label.config(text=current_player+"'s turn", foreground="white")
+    label.config(text=currentPlayerName + "'s turn", foreground="white")
     for row in range(3):
-        for column in range(3):
-            game_board[row][column].config(text="", foreground=color_blue, background=color_gray)
+        for col in range(3):
+            game_board[row][col].config(text="", foreground=color_blue, background=color_gray)
 
-# SETUP THE GAME:
-# MAKE VARIABLES FOR 2 PLAYERS
-player1 = "X"
-player2 = "O"
-
-# MAKE A VARIABLE TO KEEP TRACK OF
-# CURRENT PLAYER
-current_player = player1
-
-# DESIGN THE GAMING BOARD
-game_board = [[0, 0, 0],[0, 0, 0],[0, 0, 0]]
-
-# MAKE THE COLORS OF THE PLAYERS
-color_blue = "#4584b6"
-color_yellow = "#ffde57"
-color_gray = "#343434"
-color_light_gray = "#646464"
-
-turns = 0
-game_over = False   # GAME OVER IF THERE'S 3 DIAGONAL, VERTICAL OR HORIZONTAL OR 9 TURNS HAD PAST
-
-# CREATE THE WINDOW
-window = tkinter.Tk()
+window = tk.Tk()                                                                                # This is the window of our game
 window.title("TIC TAC TOE")
 window.resizable(False, False)
-
-# CREATE A FRAME THAT WILL
-# SAY WHO'S TURN IS IT
-game_frame = tkinter.Frame(window)
-label = tkinter.Label(game_frame, text = current_player+"'s turn", 
-                      font=("Consolas", 20), 
-                      background=color_gray,
-                      foreground="white"
-                      )
-# SETUP WHERE THE TURN BUTTON WILL BE LOCATED
-label.grid(row = 0, column = 0, columnspan = 3, sticky = "we")
+                                                         
+game_frame = tk.Frame(window)                                                                   # In this frame, we also want to display 
+label = tk.Label(game_frame, text=currentPlayerName + "'s turn", font=("Consolas", 20),         # whos turn is it right ?
+                 background=color_gray, foreground="white")                                     # so we can easily track hehehe
+label.grid(row=0, column=0, columnspan=3, sticky="we")
+game_board = [[tk.Button(game_frame, text="", font=("Consolas", 50, "bold"),
+                         background=color_gray, foreground=color_blue, width=4, height=1,
+                         command=lambda r=row, c=c: set_tile(r, c)) for c in range(3)]
+              for row in range(3)]
 for row in range(3):
-    for column in range(3):
-        game_board[row][column] = tkinter.Button(game_frame, text = "",
-                                                 font = ("Consolas", 50, "bold"),
-                                                 background=color_gray,
-                                                 foreground=color_blue, width = 4, height = 1,
-                                                 command=lambda row=row, column=column: set_tile(row, column))
-        game_board[row][column].grid(row = row + 1, column = column)
+    for col in range(3):
+        game_board[row][col].grid(row=row + 1, column=col)
 
-# MAKE A RESTART BUTTON
-# FOR THE GAME
-button = tkinter.Button(game_frame, text="Restart",
-                        font=("Consolas", 20),
-                        background=color_gray,
-                        foreground="white",
-                        command=new_game)
-# SETUP THE POSITION OF THE RESTART BUTTON
-button.grid(row = 4, column = 0, columnspan = 3, sticky = "we")
-
+btn_restart = tk.Button(game_frame, text="Restart", font=("Consolas", 20),
+                        background=color_gray, foreground="white", command=new_game)
+btn_restart.grid(row=4, column=0, columnspan=3, sticky="we")
 game_frame.pack()
 
-# WHENEVER WE RUN THE PROGRAM, WE WANT THE WINDOW TO ALWAYS OPEN IN THE CENTER
-# SETUP THE POSITION OF OUR WINDOW
-window.update()
-window_width = window.winfo_width()
-window_height = window.winfo_height()
+window.update()                                                                                 # Since for me, it's annoying to have the frame to be everywhere
+window_width = window.winfo_width()                                                             # whenever we run the program, I made this just to be sure to
+window_height = window.winfo_height()                                                           # setup the position of the window to always start at the center
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
 
